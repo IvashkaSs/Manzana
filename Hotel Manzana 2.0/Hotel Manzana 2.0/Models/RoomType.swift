@@ -2,9 +2,9 @@ import Foundation
 
 struct RoomType: Equatable {
     static var all: [RoomType] {
-        return [RoomType(id: 0, name: "Две Королевы🎎", shortName: "2Q", price: 179),
+        return [RoomType(id: 0, name: "Премиум", shortName: "2Q", price: 179),
                 RoomType(id: 1, name: "Королевский👑", shortName: "K", price: 209),
-                RoomType(id: 2, name: "Пентхаус 🏨", shortName: "PHS", price: 309)]
+                RoomType(id: 2, name: "Пентхаус🏨", shortName: "PHS", price: 309)]
     }
     
     var id: Int

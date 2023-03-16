@@ -2,6 +2,8 @@ import UIKit
 
 class AddRegistrationTableViewController: UITableViewController, SelectRoomTypeTableViewControllerDelegate {
     
+    @IBOutlet var saveButton: UIBarButtonItem!
+    
     @IBOutlet var firstNameTextField: UITextField!
     @IBOutlet var lastNameTextField: UITextField!
     @IBOutlet var emailTextField: UITextField!
@@ -65,7 +67,7 @@ class AddRegistrationTableViewController: UITableViewController, SelectRoomTypeT
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        updateSaveButton()
         updateDateView()
         updateNumberOfGuests()
         updateRoomType()
@@ -73,7 +75,6 @@ class AddRegistrationTableViewController: UITableViewController, SelectRoomTypeT
         updateRegistrationViews()
     }
     // MARK: - Table view data source
-    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath {
         case checkInDatepickerCellIndexPath where isCheckInDatePikerVisible == false:
@@ -114,7 +115,6 @@ class AddRegistrationTableViewController: UITableViewController, SelectRoomTypeT
     }
     
     //MARK: - Update Methods
-    
     func updateRegistrationViews() {
         var wifiTotal2 = 0
         
@@ -148,24 +148,28 @@ class AddRegistrationTableViewController: UITableViewController, SelectRoomTypeT
             wifiTotal2 = 10 * numberOfNights
             chargesWiFiLabel.text = "$\(wifiTotal2)"
         }
-        chargesTotalLabel.text = "💰\(registrations.roomType.price * numberOfNights + wifiTotal2)"
-        chargesWiFiDetailLabel.text = "\(wifiSwitch.isOn ? "ДА" : "НЕТ")"
+        chargesTotalLabel.text = "$\(registrations.roomType.price * numberOfNights + wifiTotal2)"
+        chargesWiFiDetailLabel.text = "\(wifiSwitch.isOn ? "Да" : "Нет")"
     }
     
-    //MARK: - updateDateView
+    func updateSaveButton() {
+        let firstName = firstNameTextField.text ?? ""
+        let lastName = lastNameTextField.text ?? ""
+        let email = emailTextField.text ?? ""
+        saveButton.isEnabled = !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty
+    }
+    
     func updateDateView() {
         checkOutDatePicker.minimumDate = Calendar.current.date(byAdding: .day, value: 1, to: checkInDatePicker.date )
         checkInDateLabel.text = checkInDatePicker.date.formatted(date: .abbreviated, time: .omitted)
         checkOutDateLabel.text = checkOutDatePicker.date.formatted(date: .abbreviated, time: .omitted)
     }
-    //MARK: - updateNumberOfGuests
+   
     func updateNumberOfGuests() {
-    
         numberOfAdultsLabel.text = "\(Int(numberOfAdultsStepper.value))"
         numberOfChildrenLabel.text = "\(Int(numberOfChildrenStepper.value))"
     }
     
-    //MARK: - updateRoomType
     func updateRoomType() {
         if let roomType = roomType {
             roomTypeDetailLabel.text = roomType.name
@@ -201,8 +205,8 @@ class AddRegistrationTableViewController: UITableViewController, SelectRoomTypeT
             wifiTotal = 0
         }
         chargesWiFiLabel.text = "$\(wifiTotal)"
-        chargesWiFiDetailLabel.text = "\(wifiSwitch.isOn ? "ДА" : "НЕТ")"
-        chargesTotalLabel.text = "💰\(roomTotalPrice + wifiTotal)"
+        chargesWiFiDetailLabel.text = "\(wifiSwitch.isOn ? "Да" : "Нет")"
+        chargesTotalLabel.text = "$\(roomTotalPrice + wifiTotal)"
     }
     
     //MARK: - selectRoomTypeTableViewController
@@ -212,6 +216,16 @@ class AddRegistrationTableViewController: UITableViewController, SelectRoomTypeT
     }
     
     // MARK: - @IBACTIONS
+    @IBAction func firstName(_ sender: UITextField) {
+        updateSaveButton()
+    }
+    
+    @IBAction func lastName(_ sender: UITextField) {
+        updateSaveButton()
+    }
+    @IBAction func email(_ sender: UITextField) {
+        updateSaveButton()
+    }
     @IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
         updateDateView()
         updateChargesSection()
